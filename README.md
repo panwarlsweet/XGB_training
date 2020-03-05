@@ -1,11 +1,12 @@
 # XGB_training
+#Before you start this make sure you do cmsenv within CMSSW setup so that you could import all the required packages
 
 In order to perform the training first we need to optimize hyperparameters which could be done using the following command:
 ````
 mkdir output_files
 python optimizeClassifier.py
 `````
-Make sure you specify the input signal and background files' path with all input training variables properly. 
+Make sure you specify the input signal and background files' path with all input training variables properly in optimizeClassifier.py. 
 Also note that by default the splitting between training and testing is 80/20 if you want to change then correct it here 
 https://github.com/panwarlsweet/XGB_training/blob/master/preprocessing_utils.py#L102-L110
 
