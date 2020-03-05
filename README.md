@@ -1,4 +1,5 @@
 # XGB_training
+#Before you start this make sure you do cmsenv within CMSSW setup so that you could import all the required packages
 
 In order to perform the training first we need to optimize hyperparameters which could be done using the following command:
 ````
