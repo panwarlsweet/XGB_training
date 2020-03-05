@@ -1,5 +1,5 @@
 import os
-import sys; sys.path.append("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training/python") # to load packages
+import sys; sys.path.append("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training") # to load packages
 import training_utils as utils
 import numpy as np
 reload(utils)

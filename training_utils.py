@@ -1,4 +1,4 @@
-import sys; sys.path.append("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training/python")
+import sys; sys.path.append("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training")
 #import matplotlib.pyplot as plt
 import os
 import random as rnd

@@ -1,4 +1,4 @@
-import sys; sys.path.append("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training/python")
+import sys; sys.path.append("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training")
 import training_utils as utils
 import os
 import numpy as np
