@@ -97,7 +97,7 @@ def optimize_parameters_randomizedCV(classifier,X_total_train,y_total_train,para
  
     now = str(datetime.datetime.now()).split(' ')[0]
     outstr = "%s_optimization_job"%now
-    outputFolder = '/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/output_files/%s/'%outstr
+    outputFolder = '/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training/output_files/'
 #    df.to_csv(outputFolder+'RandomizedSearchCV-best_parameters.txt', index=False)                
    
     writeInFile=outputFolder+'best_parameters_%s.txt'%outstr

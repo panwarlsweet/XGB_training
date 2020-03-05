@@ -1,4 +1,4 @@
-import sys; sys.path.append("/afs/cern.ch/user/l/lata/HHbbggTraining/python")
+import sys; sys.path.append("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training/python")
 #import matplotlib.pyplot as plt
 import os
 import random as rnd
@@ -8,9 +8,9 @@ import random
 
 # ---------------------------------------------------------------------------------------------------
 class IO:
-    ldata = os.path.expanduser("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/")
-    #xdata = "/afs/cern.ch/user/i/ivovtin/HHggbb/HHbbggTraining/output_files/"
-    plotFolder = os.path.expanduser("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/output_files/")
+    #ldata = os.path.expanduser("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training/")
+    ldata = ""
+    plotFolder = os.path.expanduser("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training/output_files/")
     signalName = []
     backgroundName = []
     dataName = []
