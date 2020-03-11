@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 
 ### assigning branch from root trees ########
 
-branch_names = ['leadingJet_DeepFlavour','subleadingJet_DeepFlavour','absCosThetaStar_CS','absCosTheta_bb','absCosTheta_gg','diphotonCandidatePtOverdiHiggsM','dijetCandidatePtOverdiHiggsM','leadingJet_bRegNNResolution','subleadingJet_bRegNNResolution','customLeadingPhotonIDMVA','customSubLeadingPhotonIDMVA','PhoJetMinDr','sigmaMJets', 'leadingJet_pt/Mjj', 'subleadingJet_pt/Mjj', 'leadingPhoton_pt/CMS_hgg_mass', 'subleadingPhoton_pt/CMS_hgg_mass', 'rho', 'leadingPhotonSigOverE', 'subleadingPhotonSigOverE', 'sigmaMOverM', 'deltaEtaHH']
+branch_names = ['absCosThetaStar_CS', 'absCosTheta_bb', 'absCosTheta_gg', 'PhoJetMinDr', 'customLeadingPhotonIDMVA', 'customSubLeadingPhotonIDMVA', 'leadingJet_DeepFlavour', 'subleadingJet_DeepFlavour', 'leadingPhotonSigOverE', 'subleadingPhotonSigOverE', 'sigmaMOverM', 'diphotonCandidatePtOverdiHiggsM', 'dijetCandidatePtOverdiHiggsM', 'leadingJet_bRegNNResolution', 'subleadingJet_bRegNNResolution', 'sigmaMJets/Mjj', 'leadingPhoton_pt/CMS_hgg_mass', 'subleadingPhoton_pt/CMS_hgg_mass', 'leadingJet_pt/Mjj', 'subleadingJet_pt/Mjj', 'deltaEtaHH', 'rho']
 branch_names = [c.strip() for c in branch_names]
 
 branch_names = (b.replace(" ", "_") for b in branch_names)
@@ -93,7 +93,7 @@ for b in range(1,2):
 
         from pandas.core.index import Index
 
-        column=["leadingJet_DeepFlavour","subleadingJet_DeepFlavour","absCosThetaStar_CS","absCosTheta_bb", "absCosTheta_gg", "diphotonCandidatePtOverdiHiggsM", "dijetCandidatePtOverdiHiggsM", "leadingJet_bRegNNResolution", "subleadingJet_bRegNNResolution","customLeadingPhotonIDMVA","customSubLeadingPhotonIDMVA",'PhoJetMinDr','sigmaMJets', 'leadingJet_pt/Mjj', 'subleadingJet_pt/Mjj', 'leadingPhoton_pt/CMS_hgg_mass', 'subleadingPhoton_pt/CMS_hgg_mass', 'rho', 'leadingPhotonSigOverE', 'subleadingPhotonSigOverE', 'sigmaMOverM', 'deltaEtaHH']
+        column=["leadingJet_DeepFlavour","subleadingJet_DeepFlavour","absCosThetaStar_CS","absCosTheta_bb", "absCosTheta_gg", "diphotonCandidatePtOverdiHiggsM", "dijetCandidatePtOverdiHiggsM", "leadingJet_bRegNNResolution", "subleadingJet_bRegNNResolution","customLeadingPhotonIDMVA","customSubLeadingPhotonIDMVA",'PhoJetMinDr','sigmaMJets', 'leadingJet_pt/Mjj', 'subleadingJet_pt/Mjj', 'leadingPhoton_pt/CMS_hgg_mass', 'subleadingPhoton_pt/CMS_hgg_mass', 'rho','leadingPhotonSigOverE', 'subleadingPhotonSigOverE', 'sigmaMOverM', 'deltaEtaHH']
         print("read the branches")
 
         if column is not None:

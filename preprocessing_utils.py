@@ -10,6 +10,7 @@ def define_process_weight(df,proc,name,cleanSignal=True):
     df['proc'] = ( np.ones_like(df.index)*proc ).astype(np.int8)
     df['weight'] = ( np.ones_like(df.index)).astype(np.float32)
     input_df=rpd.read_root(name,"tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0", columns = ['puweight'])
+    #input_df=rpd.read_root(name,"bbggSelectionTree", columns = ['puweight']) 
     #w = np.multiply(1,input_df[['puweight']])
     #df['weight']=w
 
@@ -99,7 +100,7 @@ def get_test_sample(x,splitting=0.5):
     return np.split(x,[halfSample])[1]
 
     
-def get_total_training_sample(x_sig,x_bkg,splitting=0.8):
+def get_total_training_sample(x_sig,x_bkg,splitting=0.5):
     x_s=pd.DataFrame(x_sig)
     x_b=pd.DataFrame(x_bkg)
     halfSample_s = int((x_s.size/len(x_s.columns))*splitting)
@@ -107,7 +108,7 @@ def get_total_training_sample(x_sig,x_bkg,splitting=0.8):
     return np.concatenate([np.split(x_s,[halfSample_s])[0],np.split(x_b,[halfSample_b])[0]])
 
     
-def get_total_test_sample(x_sig,x_bkg,splitting=0.2):
+def get_total_test_sample(x_sig,x_bkg,splitting=0.5):
     x_s=pd.DataFrame(x_sig)
     x_b=pd.DataFrame(x_bkg)
     halfSample_s = int((x_s.size/len(x_s.columns))*splitting)
