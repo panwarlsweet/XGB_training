@@ -9,10 +9,10 @@ import postprocessing_utils as postprocessing
 def define_process_weight(df,proc,name,cleanSignal=True):
     df['proc'] = ( np.ones_like(df.index)*proc ).astype(np.int8)
     df['weight'] = ( np.ones_like(df.index)).astype(np.float32)
-    input_df=rpd.read_root(name,"tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0", columns = ['puweight'])
+    input_df=rpd.read_root(name,"tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0", columns = [])
     #input_df=rpd.read_root(name,"bbggSelectionTree", columns = ['puweight']) 
-    #w = np.multiply(1,input_df[['puweight']])
-    #df['weight']=w
+    w = np.multiply(1,input_df[['weight']])
+    df['weight']=w
 
 def clean_signal_events(x_b, y_b, w_b,x_s,y_s,w_s):#some trees include also the control region,select only good events
     return x_b[np.where(w_b!=0),:][0],y_b[np.where(w_b!=0)],w_b[np.where(w_b!=0)], x_s[np.where(w_s!=0),:][0], np.asarray(y_s)[np.where(w_s!=0)],np.asarray(w_s)[np.where(w_s!=0)]
@@ -115,6 +115,10 @@ def get_total_test_sample(x_sig,x_bkg,splitting=0.5):
     halfSample_b = int((x_b.size/len(x_b.columns))*splitting)
     return np.concatenate([np.split(x_s,[halfSample_s])[1],np.split(x_b,[halfSample_b])[1]])
 
+def restore_normalization(dataframe,weight='weight',norm='btagReshapeWeight'):
+   integral_denom  = sum(dataframe[weight])
+   integral_nominator  = sum(dataframe[weight]/dataframe[norm])
+   dataframe['weight'] *= integral_nominator/integral_denom
 
 def set_signals(treeName,branch_names,shuffle=True):
     print "using tree:"+treeName
@@ -122,6 +126,8 @@ def set_signals(treeName,branch_names,shuffle=True):
 #        print utils.IO.signalName[i]
         utils.IO.signal_df.append(rpd.read_root(utils.IO.signalName[i], treeName, columns = branch_names))
         define_process_weight(utils.IO.signal_df[i],utils.IO.sigProc[i],utils.IO.signalName[i])
+        restore_normalization(utils.IO.signal_df[i],weight='weight',norm='btagReshapeWeight')
+
         if shuffle:
             utils.IO.signal_df[i]['random_index'] = np.random.permutation(range(utils.IO.signal_df[i].index.size))
             utils.IO.signal_df[i].sort_values(by='random_index',inplace=True)
@@ -131,6 +137,7 @@ def set_backgrounds(treeName,branch_names,shuffle=True):
     for i in range(utils.IO.nBkg):
         utils.IO.background_df.append(rpd.read_root(utils.IO.backgroundName[i], treeName, columns = branch_names))
         define_process_weight(utils.IO.background_df[i],utils.IO.bkgProc[i],utils.IO.backgroundName[i])
+        restore_normalization(utils.IO.background_df[i],weight='weight',norm='btagReshapeWeight')
         if shuffle:
             utils.IO.background_df[i]['random_index'] = np.random.permutation(range(utils.IO.background_df[i].index.size))
             utils.IO.background_df[i].sort_values(by='random_index',inplace=True)

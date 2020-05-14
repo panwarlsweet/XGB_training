@@ -13,16 +13,16 @@ import time
 import datetime
 start_time = time.time()
 
-ntuples = 'legacy_branch_flattrees'
-#signal = ["output_Signal_RD_BG_lowmass.root"]
-signal_BG = ["output_GluGluToBulkGravitonToHHTo2B2G_M-250_350_jetpt_20.root"]
-signal_RD = ["output_GluGluToRadionToHHTo2B2G_M-250_350_jetpt_20.root"]
+ntuples = 'training_files_with_25GeVjetpt'
+
+#signal_BG = ["output_GluGluToBulkGravitonToHHTo2B2G_M-250_350.root"]
+signal_RD = ["output_GluGluToRadionToHHTo2B2G_M-250_350.root"]
 diphotonJets = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
 #2016                                                                                          
 gJets_lowPt = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
 gJets_highPt = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
 
-utils.IO.add_signal(ntuples,signal_BG,1)
+#utils.IO.add_signal(ntuples,signal_BG,1)
 utils.IO.add_signal(ntuples,signal_RD,1)
 utils.IO.add_background(ntuples,diphotonJets,-1)
 utils.IO.add_background(ntuples,gJets_lowPt,-1)
@@ -41,8 +41,8 @@ for i in range(len(utils.IO.signalName)):
 #branch_names = 'absCosThetaStar_CS,absCosTheta_bb,absCosTheta_gg,PhoJetMinDr,customLeadingPhotonIDMVA,customSubLeadingPhotonIDMVA,leadingJet_DeepCSV,subleadingJet_DeepCSV,leadingPhotonSigOverE,subleadingPhotonSigOverE,sigmaMOverM,diphotonCandidatePtOverdiHiggsM,dijetCandidatePtOverdiHiggsM,leadingJet_bRegNNResolution,subleadingJet_bRegNNResolution,noexpand:sigmaMJets/Mjj,noexpand:leadingPhoton_pt/CMS_hgg_mass,noexpand:subleadingPhoton_pt/CMS_hgg_mass'.split(",")
 #st values with adding pt_gg/m_gg, pt_jj/M_jj
 
-branch_names = 'absCosThetaStar_CS,absCosTheta_bb,absCosTheta_gg,PhoJetMinDr,customLeadingPhotonIDMVA,customSubLeadingPhotonIDMVA,leadingJet_DeepFlavour,subleadingJet_DeepFlavour,leadingPhotonSigOverE,subleadingPhotonSigOverE,sigmaMOverM,diphotonCandidatePtOverdiHiggsM,dijetCandidatePtOverdiHiggsM,leadingJet_bRegNNResolution,subleadingJet_bRegNNResolution,noexpand:sigmaMJets/Mjj,noexpand:leadingPhoton_pt/CMS_hgg_mass,noexpand:subleadingPhoton_pt/CMS_hgg_mass,noexpand:leadingJet_pt/Mjj,noexpand:subleadingJet_pt/Mjj,deltaEtaHH,rho'.split(",")
-
+branch_names = 'absCosThetaStar_CS,absCosTheta_bb,absCosTheta_gg,PhoJetMinDr,PhoJetOtherDr,customLeadingPhotonIDMVA,customSubLeadingPhotonIDMVA,leadingJet_DeepFlavour,subleadingJet_DeepFlavour,leadingPhotonSigOverE,subleadingPhotonSigOverE,sigmaMOverM,diphotonCandidatePtOverdiHiggsM,dijetCandidatePtOverdiHiggsM,leadingJet_bRegNNResolution,subleadingJet_bRegNNResolution,noexpand:sigmaMJets/Mjj,noexpand:leadingPhoton_pt/CMS_hgg_mass,noexpand:subleadingPhoton_pt/CMS_hgg_mass,noexpand:leadingJet_pt/Mjj,noexpand:subleadingJet_pt/Mjj,rho'.split(",")
+extra_branches = ['event','weight','btagReshapeWeight','leadingJet_hflav','leadingJet_pflav','subleadingJet_hflav','subleadingJet_pflav','puweight']
 branch_names = [c.strip() for c in branch_names]
 
 print branch_names
@@ -54,7 +54,7 @@ from root_numpy import root2array, list_trees
 for i in range(len(utils.IO.backgroundName)):        
     print list_trees(utils.IO.backgroundName[i])
         
-preprocessing.set_signals_and_backgrounds("tagsDumper/trees/bbggtrees",branch_names)
+preprocessing.set_signals_and_backgrounds("tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0",branch_names+extra_branches)
 X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig=preprocessing.set_variables(branch_names)
 
 #relative weighting between components of one class is kept, all classes normalized to the same
@@ -103,9 +103,9 @@ reload(optimization)
 #              'max_depth': [3,4]
 #              }
 #all
-param_grid = {'n_estimators': [500,1000,1500,2000],
-              'max_depth': [3,5,8],
-	      'gamma' : [0,0.15,0.3],  
+param_grid = {'n_estimators': [1500,2000,2500,3000],
+              'max_depth': [5,8,10,12,15],
+	      'gamma' : [0,0.15,0.3,0.5],  
               'learning_rate': [0.001, 0.01, 0.1],    
               'reg_lambda':[1e-2, 0.1, 0.3, 1.],
 	      'reg_alpha':[0., 0.01, 0.1],
@@ -117,7 +117,7 @@ param_grid = {'n_estimators': [500,1000,1500,2000],
 #optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=5,nIter=500,nJobs=8)
 #all
 #clf = optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=3,nIter=200,nJobs=23)
-clf = optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=3,nIter=20,nJobs=30)
+clf = optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=3,nIter=30,nJobs=30)
 #
 
 print 'It took', time.time()-start_time, 'seconds.'
