@@ -18,23 +18,40 @@ reload(preprocessing)
 reload(plotting)
 reload(optimization)
 reload(postprocessing)
+###### all this should be given as an argument for file to read input #####
+sig=sys.argv[1]
+mass_range=sys.argv[2]
+if mass_range=="low":
+	mass_point = "250_350"
+elif mass_range=="mid":
+	mass_point = "400_650"
+elif mass_range=="high":
+	mass_point = "700_1000"
+year=sys.argv[3]
+pklfolder=sys.argv[4]
 
-sig="Radion"
-mass_point="250_350"
+if year=="2016":
+        tune = "CUETP8M1"
+else:
+        tune = "CP5"
 
-ntuples = '/eos/user/l/lata/Resonant_bbgg/flattrees_legacybranch_detaHHvar_6thFeb2020/2016'
+if year=="2018" :
+        ttH_sim = "output_ttHJetToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8.root"
+else:
+        ttH_sim = "output_ttHToGG_M125_13TeV_powheg_pythia8.root"
 
-signal = ["output_GluGluTo"+sig+"ToHHTo2B2G_M-"+mass_point+".root"]
-
+ntuples = str(year)
+signal = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
 diphotonJets = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
-#2016                                                                                                                                                                                                                                  
-gJets_lowPt = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
-gJets_highPt = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
+#2016
+gJets_lowPt = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_Tune"+str(tune)+"_13TeV_Pythia8.root"]
+gJets_highPt = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_Tune"+str(tune)+"_13TeV_Pythia8.root"]
+
 ggH = ["output_GluGluHToGG_M-125_13TeV_powheg_pythia8.root"]
 vbf = ["output_VBFHToGG_M-125_13TeV_powheg_pythia8.root"]
 VH = ["output_VHToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8.root"]
 bbH = ["output_bbHToGG_M-125_4FS_yb2_13TeV_amcatnlo.root"]
-ttH = ["output_ttHToGG_M125_13TeV_powheg_pythia8.root"]
+ttH = [ttH_sim]
 Data= ["Data.root"]
 
 utils.IO.add_signal(ntuples,signal,1)
@@ -62,16 +79,17 @@ for i in range(len(utils.IO.signalName)):
 print "using data file: "+ utils.IO.dataName[0]
 
 branch_names = 'absCosThetaStar_CS,absCosTheta_bb,absCosTheta_gg,PhoJetMinDr,PhoJetOtherDr,customLeadingPhotonIDMVA,customSubLeadingPhotonIDMVA,leadingJet_DeepFlavour,subleadingJet_DeepFlavour,leadingPhotonSigOverE,subleadingPhotonSigOverE,sigmaMOverM,diphotonCandidatePtOverdiHiggsM,dijetCandidatePtOverdiHiggsM,noexpand:(leadingJet_bRegNNResolution*1.4826),noexpand:(subleadingJet_bRegNNResolution*1.4826),noexpand:(sigmaMJets*1.4826),noexpand:leadingPhoton_pt/CMS_hgg_mass,noexpand:subleadingPhoton_pt/CMS_hgg_mass,noexpand:leadingJet_pt/Mjj,noexpand:subleadingJet_pt/Mjj,rho'.split(",")
-
+extra_branches = ['event','weight','btagReshapeWeight','leadingJet_hflav','leadingJet_pflav','subleadingJet_hflav','subleadingJet_pflav']
 
 branch_names = [c.strip() for c in branch_names]
 print branch_names
 
 import pandas as pd  
+
 import root_pandas as rpd
 
-# no need to shuffle here, we just count events
-preprocessing.set_signals_and_backgrounds("tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0",branch_names,shuffle=False)
+# now need to shuffle here, we just count events
+preprocessing.set_signals_and_backgrounds("tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0",branch_names+extra_branches,shuffle=False)
 X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig=preprocessing.set_variables(branch_names)
 
 X_data,y_data,weights_data = preprocessing.set_data("tagsDumper/trees/Data_13TeV_DoubleHTag_0",branch_names)
@@ -84,9 +102,8 @@ X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig=preprocessing.clean_signal_event
 # load the model from disk
 from sklearn.externals import joblib
 ###########
-mass='lowmass' 
 ##2016
-loaded_model = joblib.load(os.path.expanduser('output_files/'+mass+'_XGB_training_file.pkl'))
+loaded_model = joblib.load(os.path.expanduser(str(pklfolder)+'/'+mass_range+'mass_XGB_training_file.pkl'))
 
 print len(utils.IO.backgroundName)
 bkg = []
@@ -112,9 +129,9 @@ import os
 #st + pt/mgg, OR + ptMjj+dR
 additionalCut_names = 'MX,Mjj,CMS_hgg_mass'.split(",")
 
-outTag = 'flattening_'+mass+'_final'
+outTag = 'flattening_'+mass_range+'mass_'+sig+year+'_fixedbtag'
 
-outDir=os.path.expanduser("/afs/cern.ch/user/l/lata/HHbbggTraining/"+outTag)
+outDir=os.path.expanduser("/eos/user/l/lata/Resonant_bbgg/"+outTag)
 if not os.path.exists(outDir):
     os.mkdir(outDir)
     
@@ -129,10 +146,10 @@ nTot,dictVar = postprocessing.stackFeatures(sig_count_df,branch_names+additional
 print "Y_pred"
 print Y_pred_sig.shape
 
-processPath=os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag+'/'+utils.IO.signalName[0].split("/")[len(utils.IO.signalName[0].split("/"))-1].replace("output_","").replace(".root","")+"_preselection"+".root"
+processPath=os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag+'/'+utils.IO.signalName[0].split("/")[len(utils.IO.signalName[0].split("/"))-1].replace("output_","").replace(".root","")+"_preselection"+".root"
 postprocessing.saveTree(processPath,dictVar,nTot,Y_pred_sig)
 
-processPath=os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag+'/'+utils.IO.signalName[0].split("/")[len(utils.IO.signalName[0].split("/"))-1].replace("output_","").replace(".root","")+"_preselection_diffNaming"+".root"
+processPath=os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag+'/'+utils.IO.signalName[0].split("/")[len(utils.IO.signalName[0].split("/"))-1].replace("output_","").replace(".root","")+"_preselection_diffNaming"+".root"
 postprocessing.saveTree(processPath,dictVar,nTot,Y_pred_sig,nameTree="reducedTree_sig")
 # do
     
@@ -151,10 +168,10 @@ nTot_2,dictVar = postprocessing.stackFeatures(bkg_2_count_df,branch_names+additi
 nTot_3 = np.concatenate((nTot,nTot_2))
 print nTot_3.shape
 
-processPath=(os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag+'/'+utils.IO.backgroundName[1].split("/")[len(utils.IO.backgroundName[1].split("/"))-1].replace("output_","").replace(".root","")+"_preselection"+".root").replace("_Pt-20to40","")
+processPath=(os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag+'/'+utils.IO.backgroundName[1].split("/")[len(utils.IO.backgroundName[1].split("/"))-1].replace("output_","").replace(".root","")+"_preselection"+".root").replace("_Pt-20to40","")
 postprocessing.saveTree(processPath,dictVar,nTot_3,Y_pred_bkg[1])
 
-processPath=(os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag+'/'+utils.IO.backgroundName[1].split("/")[len(utils.IO.backgroundName[1].split("/"))-1].replace("output_","").replace(".root","")+"_preselection_diffNaming"+".root").replace("_Pt-20to40","")
+processPath=(os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag+'/'+utils.IO.backgroundName[1].split("/")[len(utils.IO.backgroundName[1].split("/"))-1].replace("output_","").replace(".root","")+"_preselection_diffNaming"+".root").replace("_Pt-20to40","")
 postprocessing.saveTree(processPath,dictVar,nTot_3,Y_pred_bkg[1],nameTree="reducedTree_bkg_2")
 
 #Bkgs in the loop - diphotJets and another
@@ -172,10 +189,10 @@ for iProcess in range(0,len(utils.IO.backgroundName)):
 
     nTot,dictVar = postprocessing.stackFeatures(bkg_count_df,branch_names+additionalCut_names)
 
-    processPath=os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag+'/'+utils.IO.backgroundName[iProcess].split("/")[len(utils.IO.backgroundName[2].split("/"))-1].replace("output_","").replace(".root","")+"_preselection"+".root"
+    processPath=os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag+'/'+utils.IO.backgroundName[iProcess].split("/")[len(utils.IO.backgroundName[2].split("/"))-1].replace("output_","").replace(".root","")+"_preselection"+".root"
     postprocessing.saveTree(processPath,dictVar,nTot,Y_pred_bkg[iSample])    
 
-    processPath=os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag+'/'+utils.IO.backgroundName[iProcess].split("/")[len(utils.IO.backgroundName[2].split("/"))-1].replace("output_","").replace(".root","")+"_preselection_diffNaming"+".root"
+    processPath=os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag+'/'+utils.IO.backgroundName[iProcess].split("/")[len(utils.IO.backgroundName[2].split("/"))-1].replace("output_","").replace(".root","")+"_preselection_diffNaming"+".root"
     if "Signal_13TeV_DoubleHTag_0"in processPath:
         treeName = "reducedTree_sig_node_"+str(iProcess-6)
     else:
@@ -189,14 +206,14 @@ data_count_df = rpd.read_root(utils.IO.dataName[0],"tagsDumper/trees/Data_13TeV_
 nTot,dictVar = postprocessing.stackFeatures(data_count_df,branch_names+additionalCut_names,isData=1)
 
 #save preselection data                                                                                                                                                                                                                                        
-processPath=os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag+'/'+utils.IO.dataName[0].split("/")[len(utils.IO.dataName[0].split("/"))-1].replace("output_","").replace(".root","")+"_preselection"+".root"
+processPath=os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag+'/'+utils.IO.dataName[0].split("/")[len(utils.IO.dataName[0].split("/"))-1].replace("output_","").replace(".root","")+"_preselection"+".root"
 postprocessing.saveTree(processPath,dictVar,nTot,Y_pred_data)
 
-processPath=os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag+'/'+utils.IO.dataName[0].split("/")[len(utils.IO.dataName[0].split("/"))-1].replace("output_","").replace(".root","")+"_preselection_diffNaming"+".root"
+processPath=os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag+'/'+utils.IO.dataName[0].split("/")[len(utils.IO.dataName[0].split("/"))-1].replace("output_","").replace(".root","")+"_preselection_diffNaming"+".root"
 postprocessing.saveTree(processPath,dictVar,nTot,Y_pred_data,nameTree="reducedTree_bkg")    
 
-print "cd "+os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag
-os.system('hadd '+ os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag+'/'+'Total_preselection_diffNaming.root '+ os.path.expanduser('/afs/cern.ch/user/l/lata/HHbbggTraining/')+outTag+'/'+'*diffNaming.root')
+print "cd "+os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag
+os.system('hadd '+ os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag+'/'+'Total_preselection_diffNaming.root '+ os.path.expanduser('/eos/user/l/lata/Resonant_bbgg/')+outTag+'/'+'*diffNaming.root')
 
         
 

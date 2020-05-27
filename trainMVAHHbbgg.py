@@ -21,14 +21,16 @@ elif mass_range=="high":
 	mass_point = "700_1000"
 year=sys.argv[3]
 pklfolder=sys.argv[4]
-
-ntuples = 'training_files_with_25GeVjetpt'
-#signal = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+mass_point+".root"]
-signal = ["output_GluGluToRadionToHHTo2B2G_M-300_narrow_13TeV-madgraph.root"]
+if year=="2016":
+        tune = "CUETP8M1"
+else:
+        tune = "CP5"
+ntuples = str(year)
+signal = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
 diphotonJets = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
 #2016
-gJets_lowPt = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
-gJets_highPt = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
+gJets_lowPt = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_Tune"+str(tune)+"_13TeV_Pythia8.root"]
+gJets_highPt = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_Tune"+str(tune)+"_13TeV_Pythia8.root"]
 
 utils.IO.add_signal(ntuples,signal,1)
 utils.IO.add_background(ntuples,diphotonJets,-1)
@@ -87,14 +89,25 @@ w_total_test = preprocessing.get_total_test_sample(weights_sig,weights_bkg).rave
 from sklearn.externals import joblib
 import xgboost as xgb
 from sklearn.metrics import mean_squared_error
+"""
 clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
        colsample_bytree=1, gamma=0.0, learning_rate=0.01, max_delta_step=0,
        max_depth=8, min_child_weight=1e-06, missing=None,
        n_estimators=2000, n_jobs=1, nthread=8, objective='binary:logistic',
        random_state=0, reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1,
        seed=0, silent=True, subsample=1)
+"""
+
+clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+              colsample_bynode=1, colsample_bytree=1, gamma=0,
+              learning_rate=0.01, max_delta_step=0, max_depth=5,
+              min_child_weight=1e-06, missing=None, n_estimators=4000, n_jobs=1,
+              nthread=4, objective='binary:logistic', random_state=0,
+              reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1, seed=0,
+              silent=True, subsample=1, verbosity=1)
+
 eval_set = [(X_total_train, y_total_train), (X_total_test, y_total_test)]
-clf.fit(X_total_train, y_total_train, sample_weight=w_total_train, eval_set=eval_set, eval_metric=["merror","mlogloss"], verbose=True)
+clf.fit(X_total_train, y_total_train, sample_weight=w_total_train, eval_set=eval_set, eval_metric=["merror","mlogloss"],early_stopping_rounds=200, verbose=True)
 mse = mean_squared_error(y_total_test, clf.predict(X_total_test))
 print("MSE: %.4f" % mse)
 #clf.evals_result()

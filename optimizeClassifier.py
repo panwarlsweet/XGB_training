@@ -117,7 +117,7 @@ param_grid = {'n_estimators': [1500,2000,2500,3000],
 #optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=5,nIter=500,nJobs=8)
 #all
 #clf = optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=3,nIter=200,nJobs=23)
-clf = optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=3,nIter=30,nJobs=30)
+clf = optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=3,nIter=20,nJobs=8)
 #
 
 print 'It took', time.time()-start_time, 'seconds.'
