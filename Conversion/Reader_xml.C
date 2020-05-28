@@ -1,14 +1,14 @@
-// root -l -b Reader_xml.C'("Radion","low")'
+// root -l -b Reader_xml.C'("Radion","low","2016")'
 #include "TMVA/Reader.h"
 
-void Reader_xml(TString signal, TString mass){
+void Reader_xml(TString signal, TString mass, TString y){
 
   TString flashgg_data = "/eos/user/l/lata/Resonant_bbgg/flattrees_legacybranch_detaHHvar_6thFeb2020/";
   TString indirMVA;
   TString dirOut;
   TString weightFile;
 
-  for (TString year : {"2016"}){
+  for (TString year : {y}){
     Float_t MVAscaling;
 
 
@@ -68,8 +68,7 @@ void Reader_xml(TString signal, TString mass){
 //=================================================================================================================
 
     //for (TString fname : {Sig,Sig1,Sig2,Sig3,Sig4,Bkg1,Bkg2,Bkg3,Bkg4,Bkg5,Bkg6,Bkg7,Bkg8,Bkg9,Data}){
-      for (TString fname : {Sig,Sig1,Sig2,Sig3,Sig4,Sig5,Sig6,Bkg1,Bkg2,Bkg3,Bkg4,Bkg5,Bkg6,Bkg7,Bkg8,Bkg9,Data}){
-// for (TString fname : {Sig,Sig1,Sig2}){ 
+      for (TString fname : {Sig,Sig1,Sig2,Sig3,Sig4,Bkg1,Bkg2,Bkg3,Bkg4,Bkg5,Bkg6,Bkg7,Bkg8,Bkg9,Data,Sig5,Sig6}){
   // create TMVA::Reader object
 	TMVA::Reader *reader = new TMVA::Reader("!V:!Silent:Color,G:AnalysisType=multiclass");
 
