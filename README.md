@@ -1,6 +1,6 @@
 # XGB_training
-#NOTE: My setup reads everything from eos and store output at eos except training output folder which will be in the same location from where command is executed
-#Before you start this make sure you do cmsenv within CMSSW setup so that you could import all the required packages
+
+## Before you start this make sure you do cmsenv within CMSSW setup so that you could import all the required packages
 
 In order to perform the training first we need to optimize hyperparameters which could be done using the following command:
 ````
@@ -11,7 +11,7 @@ Make sure you specify the input signal and background files' path with all input
 Also note that by default the splitting between training and testing is 50/50 if you want to change then correct it here 
 https://github.com/panwarlsweet/XGB_training/blob/master/preprocessing_utils.py#L102-L110
 
-Once it gets completed you should be able to get the result in the form of text files in output_files directory. 
+Once it gets completed you should be able to get the result in the form of text files in output_files directory. It prints the best estimator on screen as well.
 Now paste the best esimator from text file here 
 https://github.com/panwarlsweet/XGB_training/blob/master/trainMVAHHbbgg.py#L101-L107
 and do
@@ -20,12 +20,13 @@ python trainMVAHHbbgg.py Signal Mass_range Year foldername
 for example
 python trainMVAHHbbgg.py Radion low 2016 output_training 
 ```````
+## NOTE: My setup reads input trees from eos and store output at eos except training output folder which will be in the same location from where command is executed. If one needs to change it then path should be modified here https://github.com/panwarlsweet/XGB_training/blob/master/training_utils.py#L12-L13
 
-At the end you should be able to get all the plots with .pkl file in the output_training_Radionlow_2016 folder.
-#cumulative transformation
+At the end you should be able to get all the plots with .pkl file in the output_training_Radion_low_2016 folder.
+# cumulative transformation
 ````````
 python createReducedTrees.py Signal Mass_range Year trainingfolder
-for ex.
+for example:
 python createReducedTrees.py Radion low 2016 output_training_Radion_low_2016
  
 python transformMVAOutput.py -i /path/to/Total_preselection_diffNaming.root
