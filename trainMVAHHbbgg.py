@@ -25,17 +25,38 @@ if year=="2016":
         tune = "CUETP8M1"
 else:
         tune = "CP5"
-ntuples = str(year)
-signal = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
-diphotonJets = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
-#2016
-gJets_lowPt = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_Tune"+str(tune)+"_13TeV_Pythia8.root"]
-gJets_highPt = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_Tune"+str(tune)+"_13TeV_Pythia8.root"]
+ntuples = ""
 
+signal = ["Run2_"+str(sig)+"_"+str(mass_range)+"mass.root"]
+#signal_2016 = ["GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass2016"+str(mass_#range)+".root"]
+#signal_2017 = ["GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass2017"+str(mass_range)+".root"]
+#signal_2018 = ["GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass2018"+str(mass_range)+".root"]
+
+diphotonJets_2016 = ["DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa2016"+str(mass_range)+".root"]
+diphotonJets_2017 = ["DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa2017"+str(mass_range)+".root"]
+diphotonJets_2018 = ["DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa2018"+str(mass_range)+".root"]
+
+gJets_lowPt_2016 = ["GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia82016"+str(mass_range)+".root"]
+gJets_highPt_2016 = ["GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia82016"+str(mass_range)+".root"]
+
+gJets_lowPt_2017 = ["GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia82017"+str(mass_range)+".root"]
+gJets_highPt_2017 = ["GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia82017"+str(mass_range)+".root"]
+
+gJets_lowPt_2018 = ["GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia82018"+str(mass_range)+".root"]
+gJets_highPt_2018 = ["GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia82018"+str(mass_range)+".root"]
 utils.IO.add_signal(ntuples,signal,1)
-utils.IO.add_background(ntuples,diphotonJets,-1)
-utils.IO.add_background(ntuples,gJets_lowPt,-2)
-utils.IO.add_background(ntuples,gJets_highPt,-2)
+#utils.IO.add_signal(ntuples,signal_2016,1)
+#utils.IO.add_signal(ntuples,signal_2017,1)
+#utils.IO.add_signal(ntuples,signal_2018,1)
+utils.IO.add_background(ntuples,diphotonJets_2016,-1)
+utils.IO.add_background(ntuples,diphotonJets_2017,-1)
+utils.IO.add_background(ntuples,diphotonJets_2018,-1)
+utils.IO.add_background(ntuples,gJets_lowPt_2016,-2)
+utils.IO.add_background(ntuples,gJets_highPt_2016,-2)
+utils.IO.add_background(ntuples,gJets_lowPt_2017,-2)
+utils.IO.add_background(ntuples,gJets_highPt_2017,-2)
+utils.IO.add_background(ntuples,gJets_lowPt_2018,-2)
+utils.IO.add_background(ntuples,gJets_highPt_2018,-2)
 
 for i in range(len(utils.IO.backgroundName)):        
     print "using background file n."+str(i)+": "+utils.IO.backgroundName[i]
@@ -46,7 +67,7 @@ for i in range(len(utils.IO.signalName)):
 #use noexpand for root expressions, it needs this file https://github.com/ibab/root_pandas/blob/master/root_pandas/readwrite.py
 #st values with adding pt_gg/m_gg, pt_jj/M_jj
 branch_names = 'absCosThetaStar_CS,absCosTheta_bb,absCosTheta_gg,PhoJetMinDr,PhoJetOtherDr,customLeadingPhotonIDMVA,customSubLeadingPhotonIDMVA,leadingJet_DeepFlavour,subleadingJet_DeepFlavour,leadingPhotonSigOverE,subleadingPhotonSigOverE,sigmaMOverM,diphotonCandidatePtOverdiHiggsM,dijetCandidatePtOverdiHiggsM,noexpand:(leadingJet_bRegNNResolution*1.4826),noexpand:(subleadingJet_bRegNNResolution*1.4826),noexpand:(sigmaMJets*1.4826),noexpand:leadingPhoton_pt/CMS_hgg_mass,noexpand:subleadingPhoton_pt/CMS_hgg_mass,noexpand:leadingJet_pt/Mjj,noexpand:subleadingJet_pt/Mjj,rho'.split(",")
-extra_branches = ['event','weight','btagReshapeWeight','leadingJet_hflav','leadingJet_pflav','subleadingJet_hflav','subleadingJet_pflav','puweight']
+extra_branches = ['event','weightXlumi','btagReshapeWeight','leadingJet_hflav','leadingJet_pflav','subleadingJet_hflav','subleadingJet_pflav','puweight']
 
 branch_names = [c.strip() for c in branch_names]
 print branch_names
@@ -58,7 +79,7 @@ from root_numpy import root2array, list_trees
 #for i in range(len(utils.IO.backgroundName)):        
 #    print list_trees(utils.IO.backgroundName[i])
         
-preprocessing.set_signals_and_backgrounds("tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0",branch_names+extra_branches)
+preprocessing.set_signals_and_backgrounds("bbggtrees",branch_names+extra_branches)
 X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig=preprocessing.set_variables(branch_names)
 
 #relative weighting between components of one class is kept, all classes normalized to the same
@@ -101,8 +122,8 @@ clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
 clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
               colsample_bynode=1, colsample_bytree=1, gamma=0,
               learning_rate=0.01, max_delta_step=0, max_depth=5,
-              min_child_weight=1e-06, missing=None, n_estimators=4000, n_jobs=1,
-              nthread=4, objective='binary:logistic', random_state=0,
+              min_child_weight=1e-06, missing=None, n_estimators=4000, n_jobs=4,
+              nthread=8, objective='binary:logistic', random_state=0,
               reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1, seed=0,
               silent=True, subsample=1, verbosity=1)
 

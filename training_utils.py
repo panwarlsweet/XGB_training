@@ -9,8 +9,8 @@ import random
 # ---------------------------------------------------------------------------------------------------
 class IO:
     #ldata = os.path.expanduser("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training/")
-    ldata = os.path.expanduser("/eos/user/l/lata/Resonant_bbgg/flattrees_legacybranch_detaHHvar_6thFeb2020/")
-    plotFolder = os.path.expanduser("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training/output_files/")
+    ldata = os.path.expanduser("/eos/user/l/lata/Resonant_bbgg/Run2_mergedfiles/")
+    plotFolder = os.path.expanduser("/eos/user/l/lata/Resonant_bbgg/Run2_mergedfiles/output_files/")
     signalName = []
     backgroundName = []
     dataName = []
