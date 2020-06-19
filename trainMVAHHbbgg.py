@@ -26,7 +26,10 @@ if year=="2016":
 else:
         tune = "CP5"
 ntuples = str(year)
-signal = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
+if sig == "Radion" or "BulkGraviton":
+        signal = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
+if sig == "NMSSM":
+        signal = ["output_"+str(sig)+"_XToYHTo2b2g_MX-"+str(mass_range)+"mass.root"]
 diphotonJets = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
 #2016
 gJets_lowPt = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_Tune"+str(tune)+"_13TeV_Pythia8.root"]
