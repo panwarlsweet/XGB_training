@@ -58,16 +58,16 @@ def normalize_process_weights(w_b,y_b,w_s,y_s):
 
     return w_bkg,w_sig
 
-
+"""xc
 def weight_signal_with_resolution(w_s,y_s):
     proc=999
     for i in range(utils.IO.nSig):
          w_sig = np.asarray(w_s[np.asarray(y_s) == utils.IO.sigProc[i]])
-	 proc = utils.IO.sigProc[i]
-	 utils.IO.signal_df[i][['weight']] = np.divide(utils.IO.signal_df[i][['weight']],utils.IO.signal_df[i][['sigmaMOverMDecorr']])
+    	 proc = utils.IO.sigProc[i]
+	     utils.IO.signal_df[i][['weight']] = np.divide(utils.IO.signal_df[i][['weight']],utils.IO.signal_df[i][['sigmaMOverMDecorr']])
 
     return utils.IO.signal_df[i][['weight']]
-
+"""
 def weight_background_with_resolution(w_b,y_b,proc):
     w_bkg = []
     process=999
@@ -121,7 +121,7 @@ def restore_normalization(dataframe,weight='weight',norm='btagReshapeWeight'):
    dataframe['weight'] *= integral_nominator/integral_denom
 
 def set_signals(treeName,branch_names,shuffle=True):
-    print "using tree:"+treeName
+    print ("using tree:"+treeName)
     for i in range(utils.IO.nSig):
 #        print utils.IO.signalName[i]
         utils.IO.signal_df.append(rpd.read_root(utils.IO.signalName[i], treeName, columns = branch_names))

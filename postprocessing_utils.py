@@ -35,7 +35,7 @@ def stackFeatures(df,additionalCut_names,rounding=6,SF=1,isData=0):
 
 
 def applyCut(vec,varNum,cut,option='greater'):
-    print varNum
+    print (varNum)
     if option == 'greater':
         return vec[np.where(vec[:,varNum]>cut)]
     elif option == 'smaller':

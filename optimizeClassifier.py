@@ -1,7 +1,9 @@
+
 import os
 import sys
 import training_utils as utils
 import numpy as np
+from importlib import reload
 reload(utils)
 import preprocessing_utils as preprocessing
 reload(preprocessing)
@@ -30,9 +32,9 @@ utils.IO.add_background(ntuples,gJets_highPt,-1)
 
 
 for i in range(len(utils.IO.backgroundName)):        
-    print "using background file n."+str(i)+": "+utils.IO.backgroundName[i]
+    print ("using background file n."+str(i)+": "+utils.IO.backgroundName[i])
 for i in range(len(utils.IO.signalName)):    
-    print "using signal file n."+str(i)+": "+utils.IO.signalName[i]
+    print ("using signal file n."+str(i)+": "+utils.IO.signalName[i])
 
 #use noexpand for root expressions, it needs this file https://github.com/ibab/root_pandas/blob/master/root_pandas/readwrite.py
 #standart of input values 
@@ -45,14 +47,14 @@ branch_names = 'absCosThetaStar_CS,absCosTheta_bb,absCosTheta_gg,PhoJetMinDr,Pho
 extra_branches = ['event','weight','btagReshapeWeight','leadingJet_hflav','leadingJet_pflav','subleadingJet_hflav','subleadingJet_pflav','puweight']
 branch_names = [c.strip() for c in branch_names]
 
-print branch_names
+print( branch_names)
 
 import pandas as pd
 import root_pandas as rpd
 from root_numpy import root2array, list_trees
 
 for i in range(len(utils.IO.backgroundName)):        
-    print list_trees(utils.IO.backgroundName[i])
+    print (list_trees(utils.IO.backgroundName[i]))
         
 preprocessing.set_signals_and_backgrounds("tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0",branch_names+extra_branches)
 X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig=preprocessing.set_variables(branch_names)
@@ -63,12 +65,12 @@ weights_bkg,weights_sig=preprocessing.normalize_process_weights(weights_bkg,y_bk
 X_bkg,y_bkg,weights_bkg = preprocessing.randomize(X_bkg,y_bkg,weights_bkg)
 X_sig,y_sig,weights_sig = preprocessing.randomize(X_sig,y_sig,weights_sig)
 
-print X_bkg.shape
-print y_bkg.shape
+print (X_bkg.shape)
+print (y_bkg.shape)
 #bbggTrees have by default signal and CR events, let's be sure that we clean it
 X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig=preprocessing.clean_signal_events(X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig)
-print X_bkg.shape
-print y_bkg.shape
+#print X_bkg.shape
+#print y_bkg.shape
 
 y_total_train = preprocessing.get_total_training_sample(y_sig,y_bkg).ravel()
 X_total_train = preprocessing.get_total_training_sample(X_sig,X_bkg)
@@ -90,7 +92,7 @@ import xgboost as xgb
 
 clf = xgb.XGBClassifier(base_score=0.5, colsample_bylevel=1, colsample_bytree=1,
        gamma=0, learning_rate=0.1, max_delta_step=0, max_depth=3,
-       min_child_weight=1e-05, missing=None, n_estimators=1000, nthread=8,#4 the same as in the engine scipt smp 4
+       min_child_weight=1e-05, missing=None, n_estimators=1000, nthread=4,#4 the same as in the engine scipt smp 4
        objective='binary:logistic', reg_alpha=0, reg_lambda=0.1,
        scale_pos_weight=1, seed=0, silent=True, subsample=1)
 
@@ -103,13 +105,13 @@ reload(optimization)
 #              'max_depth': [3,4]
 #              }
 #all
-param_grid = {'n_estimators': [1500,2000,2500,3000],
+param_grid = {'n_estimators': [4000, 4500, 5000],
               'max_depth': [5,8,10,12,15],
-	      'gamma' : [0,0.15,0.3,0.5],  
-              'learning_rate': [0.001, 0.01, 0.1],    
-              'reg_lambda':[1e-2, 0.1, 0.3, 1.],
-	      'reg_alpha':[0., 0.01, 0.1],
-              'min_child_weight':[1e-06,1e-05,1e-04]
+	      'gamma' : [0],  
+              'learning_rate': [0.01],    
+              'reg_lambda':[0.3],
+	      'reg_alpha':[0.01],
+              'min_child_weight':[1e-06]
 	     }
 
 #optimization.setupJoblib("ivovtin")
@@ -117,9 +119,9 @@ param_grid = {'n_estimators': [1500,2000,2500,3000],
 #optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=5,nIter=500,nJobs=8)
 #all
 #clf = optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=3,nIter=200,nJobs=23)
-clf = optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=3,nIter=30,nJobs=30)
+clf = optimization.optimize_parameters_randomizedCV(clf,X_total_train,y_total_train,param_grid,cvOpt=5,nIter=10,nJobs=4)
 #
 
-print 'It took', time.time()-start_time, 'seconds.'
+print ('It took', time.time()-start_time, 'seconds.')
 
 
