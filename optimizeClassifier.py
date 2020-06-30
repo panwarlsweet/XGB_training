@@ -15,17 +15,18 @@ import time
 import datetime
 start_time = time.time()
 
-ntuples = 'training_files_with_25GeVjetpt'
+ntuples = 'NMSSM_2016'
 
 #signal_BG = ["output_GluGluToBulkGravitonToHHTo2B2G_M-250_350.root"]
-signal_RD = ["output_GluGluToRadionToHHTo2B2G_M-250_350.root"]
+#signal_RD = ["output_GluGluToRadionToHHTo2B2G_M-250_350.root"]
+signal = ["output_NMSSM_XToYHTo2b2g_MX-lowmass.root"]
 diphotonJets = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
 #2016                                                                                          
 gJets_lowPt = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
 gJets_highPt = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
 
 #utils.IO.add_signal(ntuples,signal_BG,1)
-utils.IO.add_signal(ntuples,signal_RD,1)
+utils.IO.add_signal(ntuples,signal,1)
 utils.IO.add_background(ntuples,diphotonJets,-1)
 utils.IO.add_background(ntuples,gJets_lowPt,-1)
 utils.IO.add_background(ntuples,gJets_highPt,-1)
@@ -105,13 +106,13 @@ reload(optimization)
 #              'max_depth': [3,4]
 #              }
 #all
-param_grid = {'n_estimators': [4000, 4500, 5000],
-              'max_depth': [5,8,10,12,15],
-	      'gamma' : [0],  
-              'learning_rate': [0.01],    
+param_grid = {'n_estimators': [2500],
+              'max_depth': [5],
+	      'gamma' : [0.3],  
+              'learning_rate': [0.01, 0.1, 0.3, 0.5],    
               'reg_lambda':[0.3],
-	      'reg_alpha':[0.01],
-              'min_child_weight':[1e-06]
+	      'reg_alpha':[0.01, 0.1, 0.3, 0.5, 1],
+              'min_child_weight':[1e-05,1e-04,1e-03,1e-02]
 	     }
 
 #optimization.setupJoblib("ivovtin")
