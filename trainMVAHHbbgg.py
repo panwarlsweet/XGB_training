@@ -2,6 +2,7 @@ import os
 import sys; sys.path.append("/afs/cern.ch/user/l/lata/HHbbggTraining/scripts/XGB_training/python") # to load packages
 import training_utils as utils
 import numpy as np
+from importlib import reload
 reload(utils)
 import preprocessing_utils as preprocessing
 reload(preprocessing)
@@ -21,33 +22,56 @@ elif mass_range=="high":
 	mass_point = "700_1000"
 year=sys.argv[3]
 pklfolder=sys.argv[4]
+if year=="2016":
+        tune = "CUETP8M1"
+else:
+        tune = "CP5"
+ntuples = "Run2_mergedfiles_yearlabel"
 
-ntuples = 'training_files_with_25GeVjetpt'
-#signal = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+mass_point+".root"]
-signal = ["output_GluGluToRadionToHHTo2B2G_M-300_narrow_13TeV-madgraph.root"]
-diphotonJets = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
-#2016
-gJets_lowPt = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
-gJets_highPt = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
+signal = ["Run2_"+str(sig)+"_"+str(mass_range)+"mass.root"]
+#signal_2016 = ["GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass2016"+str(mass_#range)+".root"]
+#signal_2017 = ["GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass2017"+str(mass_range)+".root"]
+#signal_2018 = ["GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass2018"+str(mass_range)+".root"]
 
+diphotonJets_2016 = ["DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa2016"+str(mass_range)+".root"]
+diphotonJets_2017 = ["DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa2017"+str(mass_range)+".root"]
+diphotonJets_2018 = ["DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa2018"+str(mass_range)+".root"]
+
+gJets_lowPt_2016 = ["GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia82016"+str(mass_range)+".root"]
+gJets_highPt_2016 = ["GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia82016"+str(mass_range)+".root"]
+
+gJets_lowPt_2017 = ["GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia82017"+str(mass_range)+".root"]
+gJets_highPt_2017 = ["GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia82017"+str(mass_range)+".root"]
+
+gJets_lowPt_2018 = ["GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia82018"+str(mass_range)+".root"]
+gJets_highPt_2018 = ["GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia82018"+str(mass_range)+".root"]
 utils.IO.add_signal(ntuples,signal,1)
-utils.IO.add_background(ntuples,diphotonJets,-1)
-utils.IO.add_background(ntuples,gJets_lowPt,-2)
-utils.IO.add_background(ntuples,gJets_highPt,-2)
+#utils.IO.add_signal(ntuples,signal_2016,1)
+#utils.IO.add_signal(ntuples,signal_2017,1)
+#utils.IO.add_signal(ntuples,signal_2018,1)
+utils.IO.add_background(ntuples,diphotonJets_2016,-1)
+utils.IO.add_background(ntuples,diphotonJets_2017,-1)
+utils.IO.add_background(ntuples,diphotonJets_2018,-1)
+utils.IO.add_background(ntuples,gJets_lowPt_2016,-2)
+utils.IO.add_background(ntuples,gJets_highPt_2016,-2)
+utils.IO.add_background(ntuples,gJets_lowPt_2017,-2)
+utils.IO.add_background(ntuples,gJets_highPt_2017,-2)
+utils.IO.add_background(ntuples,gJets_lowPt_2018,-2)
+utils.IO.add_background(ntuples,gJets_highPt_2018,-2)
 
 for i in range(len(utils.IO.backgroundName)):        
-    print "using background file n."+str(i)+": "+utils.IO.backgroundName[i]
+    print ("using background file n."+str(i)+": "+utils.IO.backgroundName[i])
 for i in range(len(utils.IO.signalName)):    
-    print "using signal file n."+str(i)+": "+utils.IO.signalName[i]
+    print ("using signal file n."+str(i)+": "+utils.IO.signalName[i])
 
 
 #use noexpand for root expressions, it needs this file https://github.com/ibab/root_pandas/blob/master/root_pandas/readwrite.py
 #st values with adding pt_gg/m_gg, pt_jj/M_jj
-branch_names = 'absCosThetaStar_CS,absCosTheta_bb,absCosTheta_gg,PhoJetMinDr,PhoJetOtherDr,customLeadingPhotonIDMVA,customSubLeadingPhotonIDMVA,leadingJet_DeepFlavour,subleadingJet_DeepFlavour,leadingPhotonSigOverE,subleadingPhotonSigOverE,sigmaMOverM,diphotonCandidatePtOverdiHiggsM,dijetCandidatePtOverdiHiggsM,noexpand:(leadingJet_bRegNNResolution*1.4826),noexpand:(subleadingJet_bRegNNResolution*1.4826),noexpand:(sigmaMJets*1.4826),noexpand:leadingPhoton_pt/CMS_hgg_mass,noexpand:subleadingPhoton_pt/CMS_hgg_mass,noexpand:leadingJet_pt/Mjj,noexpand:subleadingJet_pt/Mjj,rho'.split(",")
-extra_branches = ['event','weight','btagReshapeWeight','leadingJet_hflav','leadingJet_pflav','subleadingJet_hflav','subleadingJet_pflav','puweight']
+branch_names = 'absCosThetaStar_CS,absCosTheta_bb,absCosTheta_gg,PhoJetMinDr,PhoJetOtherDr,customLeadingPhotonIDMVA,customSubLeadingPhotonIDMVA,leadingJet_DeepFlavour,subleadingJet_DeepFlavour,leadingPhotonSigOverE,subleadingPhotonSigOverE,sigmaMOverM,diphotonCandidatePtOverdiHiggsM,dijetCandidatePtOverdiHiggsM,noexpand:(leadingJet_bRegNNResolution*1.4826),noexpand:(subleadingJet_bRegNNResolution*1.4826),noexpand:(sigmaMJets*1.4826),noexpand:leadingPhoton_pt/CMS_hgg_mass,noexpand:subleadingPhoton_pt/CMS_hgg_mass,noexpand:leadingJet_pt/Mjj,noexpand:subleadingJet_pt/Mjj,rho,year'.split(",")
+extra_branches = ['event','weightXlumi','btagReshapeWeight','leadingJet_hflav','leadingJet_pflav','subleadingJet_hflav','subleadingJet_pflav','puweight']
 
 branch_names = [c.strip() for c in branch_names]
-print branch_names
+print (branch_names)
 
 import pandas as pd
 import root_pandas as rpd
@@ -56,7 +80,7 @@ from root_numpy import root2array, list_trees
 #for i in range(len(utils.IO.backgroundName)):        
 #    print list_trees(utils.IO.backgroundName[i])
         
-preprocessing.set_signals_and_backgrounds("tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0",branch_names+extra_branches)
+preprocessing.set_signals_and_backgrounds("bbggtrees",branch_names+extra_branches)
 X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig=preprocessing.set_variables(branch_names)
 
 #relative weighting between components of one class is kept, all classes normalized to the same
@@ -66,12 +90,12 @@ weights_bkg,weights_sig=preprocessing.normalize_process_weights(weights_bkg,y_bk
 X_bkg,y_bkg,weights_bkg = preprocessing.randomize(X_bkg,y_bkg,weights_bkg)
 X_sig,y_sig,weights_sig = preprocessing.randomize(X_sig,y_sig,weights_sig)
 
-print X_bkg.shape
-print y_bkg.shape
+print (X_bkg.shape)
+print (y_bkg.shape)
 #bbggTrees have by default signal and CR events, let's be sure that we clean it
 X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig=preprocessing.clean_signal_events(X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig)
-print X_bkg.shape
-print y_bkg.shape
+print (X_bkg.shape)
+print (y_bkg.shape)
 
 y_total_train = preprocessing.get_total_training_sample(y_sig,y_bkg).ravel()
 X_total_train = preprocessing.get_total_training_sample(X_sig,X_bkg)
@@ -87,18 +111,29 @@ w_total_test = preprocessing.get_total_test_sample(weights_sig,weights_bkg).rave
 from sklearn.externals import joblib
 import xgboost as xgb
 from sklearn.metrics import mean_squared_error
+"""
 clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
        colsample_bytree=1, gamma=0.0, learning_rate=0.01, max_delta_step=0,
        max_depth=8, min_child_weight=1e-06, missing=None,
        n_estimators=2000, n_jobs=1, nthread=8, objective='binary:logistic',
        random_state=0, reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1,
        seed=0, silent=True, subsample=1)
+"""
+
+clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+              colsample_bynode=1, colsample_bytree=1, gamma=0,
+              learning_rate=0.01, max_delta_step=0, max_depth=5,
+              min_child_weight=1e-06, missing=None, n_estimators=4000, n_jobs=4,
+              nthread=4, objective='binary:logistic', random_state=0,
+              reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1, seed=0,
+              silent=True, subsample=1, verbosity=1)
+
 eval_set = [(X_total_train, y_total_train), (X_total_test, y_total_test)]
-clf.fit(X_total_train, y_total_train, sample_weight=w_total_train, eval_set=eval_set, eval_metric=["merror","mlogloss"], verbose=True)
+clf.fit(X_total_train, y_total_train, sample_weight=w_total_train, eval_set=eval_set, eval_metric=["merror","mlogloss"],early_stopping_rounds=200, verbose=True)
 mse = mean_squared_error(y_total_test, clf.predict(X_total_test))
 print("MSE: %.4f" % mse)
 #clf.evals_result()
-print clf.score(X_total_train,y_total_train)
+print (clf.score(X_total_train,y_total_train))
 
 from xgboost import plot_tree
 from sklearn.metrics import accuracy_score
@@ -141,23 +176,23 @@ plt.clf()
 #plt.show()
 
 fpr_dipho_2ndtest_2,tpr_dipho_2ndtest_2 = plotting.plot_roc_curve_multiclass_singleBkg(X_total_test,y_total_test,clf,-1,1,outTag+"_test_xgbr_diphotons",weights=w_total_test)
-plotting.print_roc_report(fpr_dipho_2ndtest_2,tpr_dipho_2ndtest_2,outString=outTag+"_test_xgbr_diphotons")
+plotting.print_roc_report(fpr_dipho_2ndtest_2,tpr_dipho_2ndtest_2,outString=str(sig)+"_"+outTag+"_"+str(year)+"_test_xgbr_diphotons")
 plt.savefig(str(folder)+'/'+outTag+"_test_xgbr_diphotons.pdf")
 plt.clf()
 #plt.show()
 fpr_gJets_2ndtest_2,tpr_gJets_2ndtest_2 = plotting.plot_roc_curve_multiclass_singleBkg(X_total_test,y_total_test,clf,-2,1,outTag+"_test_xgbr_gJets",weights=w_total_test)
-plotting.print_roc_report(fpr_gJets_2ndtest_2,tpr_gJets_2ndtest_2,outString=outTag+"_test_xgbr_gJets")
+plotting.print_roc_report(fpr_gJets_2ndtest_2,tpr_gJets_2ndtest_2,outString=str(sig)+"_"+outTag+"_"+str(year)+"_test_xgbr_gJets")
 plt.savefig(str(folder)+'/'+outTag+"_test_xgbr_gJets.pdf")
 plt.clf()
 #plt.show()
 
 fpr_dipho_2ndtrain_2,tpr_dipho_2ndtrain_2 = plotting.plot_roc_curve_multiclass_singleBkg(X_total_train,y_total_train,clf,-1,1,outTag+"_train_xgbr_diphotons",weights=w_total_train)
-plotting.print_roc_report(fpr_dipho_2ndtrain_2,tpr_dipho_2ndtrain_2,outString=outTag+"_train_xgbr_diphotons")
+plotting.print_roc_report(fpr_dipho_2ndtrain_2,tpr_dipho_2ndtrain_2,outString=str(sig)+"_"+outTag+"_"+str(year)+"_train_xgbr_diphotons")
 plt.savefig(str(folder)+'/'+outTag+"_train_xgbr_diphotons.pdf")
-plt.clf()
+plt.clf() 
 #plt.show()
 fpr_gJets_2ndtrain_2,tpr_gJets_2ndtrain_2 = plotting.plot_roc_curve_multiclass_singleBkg(X_total_train,y_total_train,clf,-2,1,outTag+"_train_xgbr_gJets",weights=w_total_train)
-plotting.print_roc_report(fpr_gJets_2ndtrain_2,tpr_gJets_2ndtrain_2,outString=outTag+"_train_xgbr_gJets")
+plotting.print_roc_report(fpr_gJets_2ndtrain_2,tpr_gJets_2ndtrain_2,outString=str(sig)+"_"+outTag+"_"+str(year)+"_train_xgbr_gJets")
 plt.savefig(str(folder)+'/'+outTag+"_train_xgbr_gJets.pdf")
 plt.clf()
 #plt.show()
@@ -203,5 +238,6 @@ plt.ylabel('Classification Error')
 plt.title('XGBoost Classification Error')
 plt.savefig(str(folder)+'/'+outTag+"_XGBoostClassificationError.pdf")
 print("done")
+
 
 
