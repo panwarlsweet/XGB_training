@@ -93,6 +93,7 @@ from sklearn.externals import joblib
 import xgboost as xgb
 from sklearn.metrics import mean_squared_error
 """
+### first test for RD and BG
 clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
        colsample_bytree=1, gamma=0.0, learning_rate=0.01, max_delta_step=0,
        max_depth=8, min_child_weight=1e-06, missing=None,
@@ -100,12 +101,22 @@ clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
        random_state=0, reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1,
        seed=0, silent=True, subsample=1)
 """
-
+"""
+### final for RD and BG
 clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
               colsample_bynode=1, colsample_bytree=1, gamma=0,
               learning_rate=0.01, max_delta_step=0, max_depth=5,
               min_child_weight=1e-06, missing=None, n_estimators=4000, n_jobs=1,
               nthread=4, objective='binary:logistic', random_state=0,
+              reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1, seed=0,
+              silent=True, subsample=1, verbosity=1)
+"""
+##first test for NMSSM
+clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+              colsample_bynode=1, colsample_bytree=1, gamma=0,
+              learning_rate=0.1, max_delta_step=0, max_depth=5,
+              min_child_weight=0.0001, missing=None, n_estimators=2500,
+              n_jobs=1, nthread=4, objective='binary:logistic', random_state=0,
               reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1, seed=0,
               silent=True, subsample=1, verbosity=1)
 
