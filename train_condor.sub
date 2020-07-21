@@ -1,0 +1,16 @@
+universe = vanilla
+executable = job.sh
+Signal = Radion
+Mass = low
+Year = run2
+folder = output
+arguments = $(Signal) $(Mass) $(Year) $(folder)
++JobFlavour = "tomorrow"
+output = output/classif.$(ClusterId).$(ProcId).out
+error = output/classif.$(ClusterId).$(ProcId).err
+log = output/classif.$(ClusterId).$(ProcId).log
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_output = True
+transfer_input_files = trainMVAHHbbgg.py
+queue
