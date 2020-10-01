@@ -1,11 +1,8 @@
 universe = vanilla
 executable = job.sh
-Signal = Radion
-Mass = low
-Year = run2
-folder = output
+folder = output_training_fromEOStrees
 arguments = $(Signal) $(Mass) $(Year) $(folder)
-+JobFlavour = "tomorrow"
++JobFlavour = "testmatch"
 output = output/classif.$(ClusterId).$(ProcId).out
 error = output/classif.$(ClusterId).$(ProcId).err
 log = output/classif.$(ClusterId).$(ProcId).log

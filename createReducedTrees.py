@@ -78,8 +78,8 @@ for i in range(len(utils.IO.signalName)):
 
 print "using data file: "+ utils.IO.dataName[0]
 
-branch_names = 'absCosThetaStar_CS,absCosTheta_bb,absCosTheta_gg,PhoJetMinDr,PhoJetOtherDr,customLeadingPhotonIDMVA,customSubLeadingPhotonIDMVA,leadingJet_DeepFlavour,subleadingJet_DeepFlavour,leadingPhotonSigOverE,subleadingPhotonSigOverE,sigmaMOverM,diphotonCandidatePtOverdiHiggsM,dijetCandidatePtOverdiHiggsM,noexpand:(leadingJet_bRegNNResolution*1.4826),noexpand:(subleadingJet_bRegNNResolution*1.4826),noexpand:(sigmaMJets*1.4826),noexpand:leadingPhoton_pt/CMS_hgg_mass,noexpand:subleadingPhoton_pt/CMS_hgg_mass,noexpand:leadingJet_pt/Mjj,noexpand:subleadingJet_pt/Mjj,rho'.split(",")
-extra_branches = ['event','weight','btagReshapeWeight','leadingJet_hflav','leadingJet_pflav','subleadingJet_hflav','subleadingJet_pflav']
+branch_names = 'absCosThetaStar_CS,absCosTheta_bb,absCosTheta_gg,PhoJetMinDr,PhoJetOtherDr,customLeadingPhotonIDMVA,customSubLeadingPhotonIDMVA,leadingJet_DeepFlavour,subleadingJet_DeepFlavour,leadingPhotonSigOverE,subleadingPhotonSigOverE,sigmaMOverM,diphotonCandidatePtOverdiHiggsM,dijetCandidatePtOverdiHiggsM,noexpand:(leadingJet_bRegNNResolution*1.4826),noexpand:(subleadingJet_bRegNNResolution*1.4826),noexpand:(sigmaMJets*1.4826),noexpand:leadingPhoton_pt/CMS_hgg_mass,noexpand:subleadingPhoton_pt/CMS_hgg_mass,noexpand:leadingJet_pt/Mjj,noexpand:subleadingJet_pt/Mjj,rho,year'.split(",")
+extra_branches = ['event','weight','btagReshapeWeight','leadingJet_hflav','leadingJet_pflav','subleadingJet_hflav','subleadingJet_pflav','lumi_fb']
 
 branch_names = [c.strip() for c in branch_names]
 print branch_names
@@ -129,7 +129,7 @@ import os
 #st + pt/mgg, OR + ptMjj+dR
 additionalCut_names = 'MX,Mjj,CMS_hgg_mass'.split(",")
 
-outTag = 'flattening_'+mass_range+'mass_'+sig+year+'_fixedbtag'
+outTag = 'flattrees_L2Regression_resonant_PR1217_PR1220_17Sep2020/WED/flattening_'+mass_range+'mass_'+sig+year+'_L2-regression'
 
 outDir=os.path.expanduser("/eos/user/l/lata/Resonant_bbgg/"+outTag)
 if not os.path.exists(outDir):
