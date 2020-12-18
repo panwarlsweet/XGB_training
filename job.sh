@@ -6,4 +6,4 @@ echo "CMSSW: "$CMSSW_BASE
 #Run your program
 cd /afs/cern.ch/work/l/lata/HHbbgg_analysis/XGB_training/XGB_training
 #python trainMVAHHbbgg.py Radion low run2 test 
-python trainMVAHHbbgg.py $1 $2 $3 $4
+python trainMVAHHbbgg.py $1 $2 $3 $4 $5

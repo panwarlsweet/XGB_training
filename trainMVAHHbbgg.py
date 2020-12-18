@@ -13,14 +13,10 @@ from IPython import get_ipython
 
 sig=sys.argv[1]
 mass_range=sys.argv[2]
-if mass_range=="low":
-	mass_point = "250_350"
-elif mass_range=="mid":
-	mass_point = "400_650"
-elif mass_range=="high":
-	mass_point = "700_1000"
 year=sys.argv[3]
 pklfolder=sys.argv[4]
+Mjjbin=sys.argv[5]
+
 if year=="2016":
         tune = "CUETP8M1"
 else:
@@ -28,45 +24,53 @@ else:
 ntuples = ""
 
 #signal = ["Run2_"+str(sig)+"_"+str(mass_range)+"mass.root"]
-signal_2016 = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
-signal_2017 = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
-signal_2018 = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
+if sig == "Radion" or sig == "BulkGraviton":
+        signal_2016 = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
+        signal_2017 = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
+        signal_2018 = ["output_GluGluTo"+str(sig)+"ToHHTo2B2G_M-"+str(mass_range)+"mass.root"]
+        diphotonJets_2016 = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
 
-diphotonJets_2016 = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
-#ggbjets_2016 = ["output_DiPhotonJetsBox2BJets_MGG-80toInf_13TeV-Sherpa.root"]
-#ggbbjets_2016 = ["output_DiPhotonJetsBox1BJet_MGG-80toInf_13TeV-Sherpa.root"]
+        diphotonJets_2017 = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
+        
+        diphotonJets_2018 = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
 
-diphotonJets_2017 = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
-#ggbjets_2017 = ["output_DiPhotonJetsBox2BJets_MGG-80toInf_13TeV-Sherpa.root"]
-#ggbbjets_2017 = ["output_DiPhotonJetsBox1BJet_MGG-80toInf_13TeV-Sherpa.root"]
+        gJets_lowPt_2016 = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
+        gJets_highPt_2016 = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
 
-diphotonJets_2018 = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root"]
-#ggbjets_2018 = ["output_DiPhotonJetsBox2BJets_MGG-80toInf_13TeV-Sherpa.root"]
-#ggbbjets_2018 = ["output_DiPhotonJetsBox1BJet_MGG-80toInf_13TeV-Sherpa.root"]
+        gJets_lowPt_2017 = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8.root"]
+        gJets_highPt_2017 = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8.root"]
 
-gJets_lowPt_2016 = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
-gJets_highPt_2016 = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8.root"]
+        gJets_lowPt_2018 = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8.root"]
+        gJets_highPt_2018 = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8.root"]
 
-gJets_lowPt_2017 = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8.root"]
-gJets_highPt_2017 = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8.root"]
+elif sig == "NMSSM":
+        signal_2016 = ["output_"+str(sig)+"_XToYHTo2b2g_MX-"+str(mass_range)+"mass_"+str(Mjjbin)+"-Mjj.root"]
+        signal_2017 = ["output_"+str(sig)+"_XToYHTo2b2g_MX-"+str(mass_range)+"mass_"+str(Mjjbin)+"-Mjj.root"]
+        signal_2018 = ["output_"+str(sig)+"_XToYHTo2b2g_MX-"+str(mass_range)+"mass_"+str(Mjjbin)+"-Mjj.root"]
+        diphotonJets_2016 = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa_"+str(Mjjbin)+"-Mjj.root"]
 
-gJets_lowPt_2018 = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8.root"]
-gJets_highPt_2018 = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8.root"]
+        diphotonJets_2017 = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa_"+str(Mjjbin)+"-Mjj.root"]
+
+        diphotonJets_2018 = ["output_DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa_"+str(Mjjbin)+"-Mjj.root"]
+
+        gJets_lowPt_2016 = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8_"+str(Mjjbin)+"-Mjj.root"]
+        gJets_highPt_2016 = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8_"+str(Mjjbin)+"-Mjj.root"]
+
+        gJets_lowPt_2017 = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8_"+str(Mjjbin)+"-Mjj.root"]
+        gJets_highPt_2017 = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8_"+str(Mjjbin)+"-Mjj.root"]
+
+        gJets_lowPt_2018 = ["output_GJet_Pt-20to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8_"+str(Mjjbin)+"-Mjj.root"]
+        gJets_highPt_2018 = ["output_GJet_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV_Pythia8_"+str(Mjjbin)+"-Mjj.root"]
+        
 #utils.IO.add_signal(ntuples,signal,1)
 utils.IO.add_signal(ntuples+"2016/",signal_2016,1)
 utils.IO.add_signal(ntuples+"2017/",signal_2017,1)
 utils.IO.add_signal(ntuples+"2018/",signal_2018,1)
 utils.IO.add_background(ntuples+"2016/",diphotonJets_2016,-1)
-#utils.IO.add_background(ntuples+"2016/",ggbjets_2016,-1)
-#utils.IO.add_background(ntuples+"2016/",ggbbjets_2016,-1)
 
 utils.IO.add_background(ntuples+"2017/",diphotonJets_2017,-1)
-#utils.IO.add_background(ntuples+"2017/",ggbjets_2017,-1)
-#utils.IO.add_background(ntuples+"2017/",ggbbjets_2017,-1)
 
 utils.IO.add_background(ntuples+"2018/",diphotonJets_2018,-1)
-#utils.IO.add_background(ntuples+"2018/",ggbjets_2018,-1)
-#utils.IO.add_background(ntuples+"2018/",ggbbjets_2018,-1)
 
 utils.IO.add_background(ntuples+"2016/",gJets_lowPt_2016,-2)
 utils.IO.add_background(ntuples+"2016/",gJets_highPt_2016,-2)
@@ -98,7 +102,7 @@ from root_numpy import root2array, list_trees
 #for i in range(len(utils.IO.backgroundName)):        
 #    print list_trees(utils.IO.backgroundName[i])
         
-preprocessing.set_signals_and_backgrounds("tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0",branch_names+extra_branches)
+preprocessing.set_signals_and_backgrounds("bbggtrees_13TeV_DoubleHTag_0",branch_names+extra_branches)
 X_bkg,y_bkg,weights_bkg,X_sig,y_sig,weights_sig=preprocessing.set_variables(branch_names)
 
 #relative weighting between components of one class is kept, all classes normalized to the same
@@ -137,12 +141,20 @@ clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
        random_state=0, reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1,
        seed=0, silent=True, subsample=1)
 """
-
+"""
 clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
               colsample_bynode=1, colsample_bytree=1, gamma=0,
               learning_rate=0.01, max_delta_step=0, max_depth=5,
               min_child_weight=1e-06, missing=None, n_estimators=4000, n_jobs=8,
               nthread=8, objective='binary:logistic', random_state=0,
+              reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1, seed=0,
+              silent=True, subsample=1, verbosity=1)
+"""
+clf = xgb.XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+              colsample_bynode=1, colsample_bytree=1, gamma=0,
+              learning_rate=0.1, max_delta_step=0, max_depth=5,
+              min_child_weight=0.0001, missing=None, n_estimators=2500,
+              n_jobs=1, nthread=4, objective='binary:logistic', random_state=0,
               reg_alpha=0.01, reg_lambda=0.3, scale_pos_weight=1, seed=0,
               silent=True, subsample=1, verbosity=1)
 
@@ -164,7 +176,10 @@ import matplotlib.pyplot as plt
 reload(plt)
 
 outTag = mass_range+'mass'
+if sig == "NMSSM":
+        outTag = mass_range+'-X'+"_"+str(Mjjbin)+"-Mjj"
 folder = str(pklfolder)+'_' + str(sig) + '_' + outTag + '_' + str(year)
+
 if not os.path.exists(folder):
     os.mkdir(folder)
 joblib.dump(clf, os.path.expanduser(str(folder)+'/'+outTag+'_XGB_training_file.pkl'), compress=9)

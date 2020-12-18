@@ -1,7 +1,7 @@
 universe = vanilla
 executable = job.sh
 folder = output_training_fromEOStrees
-arguments = $(Signal) $(Mass) $(Year) $(folder)
+arguments = $(Signal) $(Mass) $(Year) $(folder) $(Mjjbin)
 +JobFlavour = "testmatch"
 output = output/classif.$(ClusterId).$(ProcId).out
 error = output/classif.$(ClusterId).$(ProcId).err

@@ -9,7 +9,7 @@ import postprocessing_utils as postprocessing
 def define_process_weight(df,proc,name,cleanSignal=True):
     df['proc'] = ( np.ones_like(df.index)*proc ).astype(np.int8)
     df['weight'] = ( np.ones_like(df.index)).astype(np.float32)
-    input_df=rpd.read_root(name,"tagsDumper/trees/bbggtrees_13TeV_DoubleHTag_0", columns = [])
+    input_df=rpd.read_root(name,"bbggtrees_13TeV_DoubleHTag_0", columns = [])
     #input_df=rpd.read_root(name,"bbggSelectionTree", columns = ['puweight']) 
     #w = np.multiply(1,input_df[['weight']])
     w = np.multiply(input_df[['weight']],input_df[['lumi_fb']])

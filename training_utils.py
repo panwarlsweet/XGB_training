@@ -8,8 +8,8 @@ import random
 
 # ---------------------------------------------------------------------------------------------------
 class IO:
-    ldata = os.path.expanduser("/eos/user/l/lata/Resonant_bbgg/flattrees_L2Regression_resonant_PR1217_PR1220_17Sep2020/WED/")
-    #ldata = os.path.expanduser("/eos/user/l/lata/Resonant_bbgg/Run2_mergedfiles_yearlabel/")
+    #ldata = os.path.expanduser("/eos/user/l/lata/Resonant_bbgg/flattrees_L2Regression_resonant_PR1217_PR1220_17Sep2020/WED/")
+    ldata = os.path.expanduser("/eos/user/l/lata/Resonant_bbgg/flattrees_NMSSM_fromjobs/hadd_files/training_trees/")
     plotFolder = os.path.expanduser("/afs/cern.ch/work/l/lata/HHbbgg_analysis/XGB_training/XGB_training/output_files/")
     signalName = []
     backgroundName = []
